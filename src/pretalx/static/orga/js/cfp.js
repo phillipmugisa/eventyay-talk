@@ -35,13 +35,13 @@ const sortEntries = (parentElem) => {
 
 const makeCfpContentSwappable = () => {
   document.querySelectorAll("fieldset table tbody").forEach(parentElem => {
-    const firstItem = parentElem.querySelector("tr:first-of-type");
     
     // if firstItem has form position > -1, sort the fields based on saved field positions
-    if (firstItem.getAttribute("data-form-position") != null && parseInt(firstItem.getAttribute("data-form-position")) > -1) {
+    if (parentElem.querySelector("tr:first-of-type").getAttribute("data-form-position") != null && parseInt(parentElem.querySelector("tr:first-of-type").getAttribute("data-form-position")) > -1) {
       sortEntries(parentElem)
     }
-
+    
+    const firstItem = parentElem.querySelector("tr:first-of-type");
     parentElem.querySelectorAll("tr").forEach((row, i) => {
 
       // if any attritube has form position = -1, assign positions based on default position
@@ -99,7 +99,7 @@ const makeCfpContentSwappable = () => {
       }
       fieldPositionTracker.className = "fieldPositionTracker"
       // fieldPositionTracker.style.display = "none"
-      fieldPositionTracker.innerHTML = `<input type="number" name="fieldPosition-${row.getAttribute("data-field-name")}" value="${row.getAttribute("data-form-position")}">`
+      fieldPositionTracker.innerHTML = `<input type="hidden" name="fieldPosition-${row.getAttribute("data-field-name")}" value="${row.getAttribute("data-form-position")}">`
     });
 
   })
