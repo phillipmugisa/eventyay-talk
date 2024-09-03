@@ -171,6 +171,28 @@ class CfPForm(ReadOnlyFlag, I18nHelpText, JsonSubfieldMixin, I18nModelForm):
             "count_length_in": "settings",
         }
 
+    def __init__(self, *args, **kwargs):
+        super(CfPForm, self).__init__(*args, **kwargs)
+
+
+        print("positions:", self.instance.fields.get("positions", None))
+        if not self.instance.fields.get("positions", None):
+            self.instance.fields["positions"] = {
+                "text": -1,
+                "headline": -1,
+            }
+            self.instance.save()
+    
+    def save(self, *args, **kwargs):
+        super(CfPForm, self).save(*args, **kwargs)
+        for field in ["headline", "text"]:
+            # saving position data
+            position_value = self.data.get(f"fieldPosition-{field}")
+            if position_value != None:
+                self.instance.fields["positions"][field] = position_value
+
+        return super(CfPForm, self).save(*args, **kwargs)
+    
 
 class QuestionForm(ReadOnlyFlag, I18nHelpText, I18nModelForm):
     options = forms.FileField(

@@ -42,7 +42,7 @@ const makeCfpContentSwappable = () => {
       sortEntries(parentElem)
     }
 
-    parentElem.querySelectorAll("tr").forEach((row) => {
+    parentElem.querySelectorAll("tr").forEach((row, i) => {
 
       // if any attritube has form position = -1, assign positions based on default position
       if (row.getAttribute("data-form-position") != null && parseInt(row.getAttribute("data-form-position")) < 0) {

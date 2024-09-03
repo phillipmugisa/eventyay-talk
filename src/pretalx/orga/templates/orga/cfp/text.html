@@ -39,10 +39,10 @@
                         <legend id="text">{% translate "Text and deadline" %}</legend>
                         <table class="table table-sm">
                             <tbody>
-                                <tr>
+                                <tr data-form-position="{{ object.fields.positions.headline }}" data-field-name="headline">
                                     <td>{% bootstrap_field form.headline layout='event' %}</td>
                                 </tr>
-                                <tr>
+                                <tr data-form-position="{{ object.fields.positions.text }}" data-field-name="text">
                                     <td>{% bootstrap_field form.text layout='event' %}</td>
                                 </tr>
                             </tbody>
