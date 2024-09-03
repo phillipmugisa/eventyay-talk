@@ -101,6 +101,14 @@ class CfPSettingsForm(
         if not obj.is_multilingual:
             self.fields.pop("cfp_ask_content_locale", None)
 
+
+        # adding position attributes
+        for field in [*self.request_require_fields, *self.length_fields]:
+            if not self.instance.cfp.fields[field].get("form_position", None):
+                # adding custom property to model field if not present
+                self.instance.cfp.fields[field]["form_position"] = -1
+                self.instance.cfp.save()
+
     def save(self, *args, **kwargs):
         for key in self.request_require_fields:
             if key not in self.instance.cfp.fields:
@@ -108,6 +116,12 @@ class CfPSettingsForm(
             self.instance.cfp.fields[key]["visibility"] = self.cleaned_data.get(
                 f"cfp_ask_{key}"
             )
+            
+            # saving position data
+            position_value = self.data.get(f"fieldPosition-{key}")
+            if position_value != None:
+                self.instance.cfp.fields[key]["form_position"] = position_value
+
         for key in self.length_fields:
             self.instance.cfp.fields[key]["min_length"] = self.cleaned_data.get(
                 f"cfp_{key}_min_length"
@@ -115,6 +129,12 @@ class CfPSettingsForm(
             self.instance.cfp.fields[key]["max_length"] = self.cleaned_data.get(
                 f"cfp_{key}_max_length"
             )
+            
+            # saving position data
+            position_value = self.data.get(f"fieldPosition-{key}")
+            if position_value != None:
+                self.instance.cfp.fields[key]["form_position"] = position_value
+            
         self.instance.cfp.save()
         super().save(*args, **kwargs)
 

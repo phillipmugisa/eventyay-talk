@@ -37,8 +37,16 @@
                     {% bootstrap_form_errors sform %}
                     <fieldset>
                         <legend id="text">{% translate "Text and deadline" %}</legend>
-                        {% bootstrap_field form.headline layout='event' %}
-                        {% bootstrap_field form.text layout='event' %}
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>{% bootstrap_field form.headline layout='event' %}</td>
+                                </tr>
+                                <tr>
+                                    <td>{% bootstrap_field form.text layout='event' %}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         {% bootstrap_field form.deadline layout='event' %}
                         {% if different_deadlines %}
                             <div class="offset-md-3 alert alert-info">
@@ -69,86 +77,94 @@
                             {% translate "Select which information should be requested and/or required during CfP proposal." %}
                             <a href="{{ request.event.cfp.urls.submit }}">{% translate "Click here to view the proposal form." %}</a>
                         </span></div>
-                        <div class="table-responsive-sm"><table class="table offset-md-3 table-sm table-hover table-flip table-sticky" id="cfp-option-table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th>{% translate "Minimum length" %}</th>
-                                    <th>{% translate "Maximum length" %}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>{% translate "Title" %}</th>
-                                    <td></td>
-                                    <td>{% bootstrap_field sform.cfp_title_min_length use_label=False layout='inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_title_max_length use_label=False layout='inline' %}</td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Abstract" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_abstract layout='event-inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_abstract_min_length use_label=False layout='inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_abstract_max_length use_label=False layout='inline' %}</td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Description" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_description layout='event-inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_description_min_length use_label=False layout='inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_description_max_length use_label=False layout='inline' %}</td>
-                                </tr>
-                                <tr{% if request.event.settings.use_tracks %}class="d-none"{% endif %}>
-                                    <th>{% translate "Track" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_track layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                {% if request.event.is_multilingual %}
+                        <div class="table-responsive-sm">
+                            <table class="table offset-md-3 table-sm table-hover table-flip table-sticky" id="cfp-option-table">
+                                <thead>
                                     <tr>
-                                        <th>{% translate "Language" %}</th>
-                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_content_locale layout='event-inline' %}</td>
+                                        <th></th>
+                                        <th></th>
+                                        <th>{% translate "Minimum length" %}</th>
+                                        <th>{% translate "Maximum length" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-form-position="{{ object.fields.title.form_position }}" data-field-name="title">
+                                        <th>{% translate "Title" %}</th>
+                                        <td></td>
+                                        <td>{% bootstrap_field sform.cfp_title_min_length use_label=False layout='inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_title_max_length use_label=False layout='inline' %}</td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.abstract.form_position }}" data-field-name="abstract">
+                                        <th>{% translate "Abstract" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_abstract layout='event-inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_abstract_min_length use_label=False layout='inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_abstract_max_length use_label=False layout='inline' %}</td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.description.form_position }}" data-field-name="description">
+                                        <th>{% translate "Description" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_description layout='event-inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_description_min_length use_label=False layout='inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_description_max_length use_label=False layout='inline' %}</td>
+                                    </tr>
+                                    <tr{% if request.event.settings.use_tracks %}class="d-none"{% endif %} data-form-position="{{ object.fields.track.form_position }}" data-field-name="track">
+                                        <th>{% translate "Track" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_track layout='event-inline' %}</td>
                                         <td></td>
                                         <td></td>
                                     </tr>
-                                {% endif %}
-                                <tr>
-                                    <th>{% translate "Additional speakers" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_additional_speaker layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Availability" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_availabilities layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Notes" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_notes layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Recording opt-out" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_do_not_record layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Session image" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_image layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Duration" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_duration layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table></div>
+                                    {% if request.event.is_multilingual %}
+                                        <tr data-form-position="{{ object.fields.content_locale.form_position }}" data-field-name="content_locale">
+                                            <th>{% translate "Language" %}</th>
+                                            <td class="hide-label">{% bootstrap_field sform.cfp_ask_content_locale layout='event-inline' %}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr data-form-position="{{ object.fields.additional_speaker.form_position }}" data-field-name="additional_speaker">
+                                        <th>{% translate "Additional speakers" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_additional_speaker layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.availabilities.form_position }}" data-field-name="availabilities">
+                                        <th>{% translate "Availability" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_availabilities layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.notes.form_position }}" data-field-name="notes">
+                                        <th>{% translate "Notes" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_notes layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.do_not_record.form_position }}" data-field-name="do_not_record">
+                                        <th>{% translate "Recording opt-out" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_do_not_record layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.image.form_position }}" data-field-name="image">
+                                        <th>{% translate "Session image" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_image layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.duration.form_position }}" data-field-name="duration">
+                                        <th>{% translate "Duration" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_duration layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="offset-md-3 my-3">
+                                <a href="{{request.event.cfp.urls.new_question }}" class="btn btn-success">
+                                    <i class="fa fa-plus"></i>
+                                    {% translate "Add a custom question" %}
+                                </a>
+                            </div>
+                        </div>
                         <div class="inline-group">
                             {% bootstrap_field form.count_length_in layout='event' %}
                         </div>
@@ -159,35 +175,46 @@
                         <div class="offset-md-3 alert alert-info"><span>
                             {% translate "Speaker Profile" %}
                         </span></div>
-                        <div class="table-responsive-md"><table class="table offset-md-3 table-sm table-hover table-flip" id="cfp-option-table">
-                                <tr>
-                                    <th>{% translate "Profile picture" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_avatar layout='event-inline' %}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Profile picture source" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_avatar_source layout='event-inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_avatar_source_min_length use_label=False layout='inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_avatar_source_max_length use_label=False layout='inline' %}</td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Profile picture license" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_avatar_license layout='event-inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_avatar_license_min_length use_label=False layout='inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_avatar_license_max_length use_label=False layout='inline' %}</td>
-                                </tr>
-                                <tr>
-                                    <th>{% translate "Biography" %}</th>
-                                    <td class="hide-label">{% bootstrap_field sform.cfp_ask_biography layout='event-inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_biography_min_length use_label=False layout='inline' %}</td>
-                                    <td>{% bootstrap_field sform.cfp_biography_max_length use_label=False layout='inline' %}</td>
-                                </tr>
-		        </table></div>
+                        <div class="table-responsive-md">
+                            <table class="table offset-md-3 table-sm table-hover table-flip" id="cfp-option-table">
+                                <tbody>
+                                    <tr data-form-position="{{ object.fields.avatar.form_position }}" data-field-name="avatar">
+                                        <th>{% translate "Profile picture" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_avatar layout='event-inline' %}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.avatar_source.form_position }}" data-field-name="avatar_source">
+                                        <th>{% translate "Profile picture source" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_avatar_source layout='event-inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_avatar_source_min_length use_label=False layout='inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_avatar_source_max_length use_label=False layout='inline' %}</td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.avatar_license.form_position }}" data-field-name="avatar_license">
+                                        <th>{% translate "Profile picture license" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_avatar_license layout='event-inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_avatar_license_min_length use_label=False layout='inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_avatar_license_max_length use_label=False layout='inline' %}</td>
+                                    </tr>
+                                    <tr data-form-position="{{ object.fields.biography.form_position }}" data-field-name="biography">
+                                        <th>{% translate "Biography" %}</th>
+                                        <td class="hide-label">{% bootstrap_field sform.cfp_ask_biography layout='event-inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_biography_min_length use_label=False layout='inline' %}</td>
+                                        <td>{% bootstrap_field sform.cfp_biography_max_length use_label=False layout='inline' %}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="offset-md-3 my-3">
+                                <a href="{{request.event.cfp.urls.new_question }}" class="btn btn-success">
+                                    <i class="fa fa-plus"></i>
+                                    {% translate "Add a custom question" %}
+                                </a>
+                            </div>
+                        </div>
                     </fieldset>
                     {% include "orga/includes/submit_row.html" %}
                 </form>
             </div>
         </div>
+
 {% endblock %}
