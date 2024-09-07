@@ -52,6 +52,28 @@ class CfPTextDetail(PermissionRequired, ActionFromUrl, UpdateView):
     template_name = "orga/cfp/text.html"
     permission_required = "orga.edit_cfp"
     write_permission_required = "orga.edit_cfp"
+    
+    @context
+    def questions(self):
+        question_group = {
+            "submission": [],
+            "speaker": [],
+            "reviewer": [],
+        }
+
+        for question in Question.all_objects.filter(event=self.request.event):
+            question = {
+                "question": question,
+                "formPosition": self.request.event.cfp.fields["positions"]["questions"].get(f"{question.pk}", -1)
+            }
+            if question.get("question").target == "submission":
+                question_group["submission"].append(question)
+            elif question.get("question").target == "speaker":
+                question_group["speaker"].append(question)
+            elif question.get("question").target == "reviewer":
+                question_group["reviewer"].append(question)
+        
+        return question_group
 
     @context
     @cached_property

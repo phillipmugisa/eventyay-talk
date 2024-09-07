@@ -35,6 +35,25 @@ const sortEntries = (parentElem) => {
 
 const makeCfpContentSwappable = () => {
   document.querySelectorAll("fieldset table tbody").forEach(parentElem => {
+
+    let maxIndex = -1;
+    let lessThan = []
+    parentElem.querySelectorAll("tr").forEach((row, i) => {
+      let value = parseInt(row.getAttribute("data-form-position"))
+      if (value > maxIndex) {
+        maxIndex = value;
+      }
+      if (maxIndex > 0 && value < 0) {
+        lessThan.push(row)
+      }
+    })
+
+    //  rows that havent been sorted yet should appear at the bottom
+    if (maxIndex > 0) {
+      lessThan.forEach((row, i) => {
+        row.setAttribute("data-form-position", maxIndex + i + 1)
+      })
+    }
     
     // if firstItem has form position > -1, sort the fields based on saved field positions
     if (parentElem.querySelector("tr:first-of-type").getAttribute("data-form-position") != null && parseInt(parentElem.querySelector("tr:first-of-type").getAttribute("data-form-position")) > -1) {
@@ -99,7 +118,9 @@ const makeCfpContentSwappable = () => {
       }
       fieldPositionTracker.className = "fieldPositionTracker"
       // fieldPositionTracker.style.display = "none"
-      fieldPositionTracker.innerHTML = `<input type="hidden" name="fieldPosition-${row.getAttribute("data-field-name")}" value="${row.getAttribute("data-form-position")}">`
+
+      let formValue = !isNaN(row.getAttribute("data-form-position")) ? row.getAttribute("data-form-position") : -1
+      fieldPositionTracker.innerHTML = `<input type="hidden" name="fieldPosition-${row.getAttribute("data-field-name")}" value="${formValue}">`
     });
 
   })

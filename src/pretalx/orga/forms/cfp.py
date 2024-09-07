@@ -102,6 +102,21 @@ class CfPSettingsForm(
             self.fields.pop("cfp_ask_content_locale", None)
 
 
+        # to cater for custom questions, we are saving the positions in the fields field
+        if self.instance.cfp.fields.get("positions", None) == None:
+            self.instance.cfp.fields["positions"] = {}
+            self.instance.cfp.save()
+
+        if self.instance.cfp.fields["positions"].get("questions", None) == None:
+            self.instance.cfp.fields["positions"]["questions"] = {}
+            self.instance.cfp.save()
+
+        for question in Question.all_objects.filter(event=obj):
+            if self.instance.cfp.fields["positions"]["questions"].get(f"{question.pk}", None) == None:
+                # if the question id is not in the dictionary, assign -1
+                self.instance.cfp.fields["positions"]["questions"][f"{question.pk}"] = -1
+                self.instance.cfp.save()
+
         # adding position attributes
         for field in [*self.request_require_fields, *self.length_fields]:
             if not self.instance.cfp.fields[field].get("form_position", None):
@@ -134,6 +149,13 @@ class CfPSettingsForm(
             position_value = self.data.get(f"fieldPosition-{key}")
             if position_value != None:
                 self.instance.cfp.fields[key]["form_position"] = position_value
+                
+        # saving positions for custom questions
+        for pk in self.instance.cfp.fields["positions"]["questions"].keys():
+            # get for data
+            position_value = self.data.get(f"fieldPosition-question-{pk}")
+            if position_value != None:
+                self.instance.cfp.fields["positions"]["questions"][f"{pk}"] = position_value
             
         self.instance.cfp.save()
         super().save(*args, **kwargs)
@@ -174,14 +196,16 @@ class CfPForm(ReadOnlyFlag, I18nHelpText, JsonSubfieldMixin, I18nModelForm):
     def __init__(self, *args, **kwargs):
         super(CfPForm, self).__init__(*args, **kwargs)
 
-
-        print("positions:", self.instance.fields.get("positions", None))
         if not self.instance.fields.get("positions", None):
             self.instance.fields["positions"] = {
                 "text": -1,
                 "headline": -1,
             }
-            self.instance.save()
+        if not self.instance.fields["positions"].get("text", None) or not self.instance.fields["positions"].get("headline", None):
+            self.instance.fields["positions"]["text"] = -1
+            self.instance.fields["positions"]["headline"] = -1
+        
+        self.instance.save()
     
     def save(self, *args, **kwargs):
         super(CfPForm, self).save(*args, **kwargs)

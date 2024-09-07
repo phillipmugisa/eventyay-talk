@@ -156,6 +156,20 @@
                                         <td></td>
                                         <td></td>
                                     </tr>
+                                    {% for question in questions.submission %}
+                                        <tr data-form-position="{{ question.formPosition }}" data-field-name="question-{{question.question.pk}}">
+                                            <td>
+                                                <a href="{{ question.question.urls.base }}">
+                                                    {{ question.question.question }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ question.question.get_target_display }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                             <div class="offset-md-3 my-3">
@@ -202,6 +216,20 @@
                                         <td>{% bootstrap_field sform.cfp_biography_min_length use_label=False layout='inline' %}</td>
                                         <td>{% bootstrap_field sform.cfp_biography_max_length use_label=False layout='inline' %}</td>
                                     </tr>
+                                    {% for question in questions.speaker %}
+                                    <tr data-form-position="{{ question.formPosition }}" data-field-name="question-{{question.question.pk}}">
+                                        <td>
+                                            <a href="{{ question.question.urls.base }}">
+                                                {{ question.question.question }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ question.question.get_target_display }}
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                             <div class="offset-md-3 my-3">
